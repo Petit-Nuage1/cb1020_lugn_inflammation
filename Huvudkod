@@ -4,3 +4,30 @@ Git repo for project
 
 Hej
 hhhh
+import pandas as pd
+!pip install openpyxl #vet inte om det är standard att ha denna
+
+def extrahera__kolumner(file_path, sheet_name, cols, output_csv_path):
+    df = pd.read_excel(
+        file_path,
+        sheet_name=sheet_name,
+        skiprows=[0, 1, 2, 3, 4], #skiprows på dessa då inte har datan
+        usecols=cols,
+        engine='openpyxl' #engine openpyxl
+    )
+
+    #Ändra namn på header till land och national value(%)
+    df.columns = ['Country', 'National Value(%)']
+
+    #Spara detta till en ny csv fil
+    df.to_csv(output_csv_path, index=False)
+
+#Ta input på file_path, sheet_name, och kolumner
+file_path = 'Child-Health-Coverage-Database-December-2023.xlsx'  # vi måste även ha filen xlsx i directoryn
+sheet_name = "PNEUCARE"
+cols = "B,I"  #Kolumner kommer nog variera i amningsdatan
+output_csv_path = 'extraherade_country_national_value.csv'
+
+#Kör funktionen med inputen på pneucare osv.
+extrahera__kolumner(file_path, sheet_name, cols, output_csv_path)
+print(f"Data saved to {output_csv_path}")
