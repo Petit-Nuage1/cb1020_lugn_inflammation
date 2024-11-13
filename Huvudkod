@@ -2,8 +2,6 @@
 Git repo for project
 
 
-Hej
-hhhh
 import pandas as pd
 !pip install openpyxl #vet inte om det är standard att ha denna
 
