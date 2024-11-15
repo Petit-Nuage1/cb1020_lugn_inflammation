@@ -27,13 +27,16 @@ def merge_data_for_countries(countries, output_file):
     # Läs in data från fasta filvägar
     df_amning = pd.read_csv("unicef_amning_data.csv")
     df_pneumonia = pd.read_csv("unicef_pneumonia_data.csv")
+
     
     # Filtrera amningsdata för de valda länderna
     filtered_amning = df_amning[df_amning['Geographic area'].isin(countries)]
     filtered_amning = filtered_amning[['Geographic area', 'Indicator', 'OBS_VALUE']]
+
     
     # Gruppera och beräkna medelvärdet för amningsdata
     aggregated_amning = filtered_amning.groupby(['Geographic area', 'Indicator'], as_index=False)['OBS_VALUE'].mean()
+
     
     # Filtrera pneumonidata för de valda länderna och Total-värden
     filtered_pneumonia = df_pneumonia[
@@ -43,32 +46,31 @@ def merge_data_for_countries(countries, output_file):
         (df_pneumonia["Mother's Education Level"] == 'Total')
     ]
     
-    # Välj relevanta kolumner och byt namn på 'OBS_VALUE' i pneumonidata
+    # Välj relevanta kolumner och byt namn på 'OBS_VALUE' i pneumoniadata
     filtered_pneumonia = filtered_pneumonia[['Geographic area', 'OBS_VALUE']]
     filtered_pneumonia = filtered_pneumonia.rename(columns={'OBS_VALUE': 'Pneumonia_Value'})
     aggregated_pneumonia = filtered_pneumonia.groupby('Geographic area')['Pneumonia_Value'].mean().reset_index()
+
     
-    # Slå ihop amnings- och pneumonidata
+    # Slå ihop amnings- och pneumoniadata
     merged_data = pd.merge(aggregated_amning, aggregated_pneumonia, on='Geographic area', how='left')
     
     # Spara den sammanslagna datan till en ny CSV-fil
     
     merged_data.to_csv(output_file, index=False)
-    print(f"Ny CSV-fil med amningsdata och pneumonidata för valda länder har skapats: {output_file}")
+    print("Ny CSV-fil med amningsdata och pneumonidata för valda länder har skapats:", output_file)
 
 
 #Kalla på funktionen, för respektive region: 
 
 countries_southeastasia = [
     'Thailand', 'Indonesia', 'Viet Nam', 'Philippines', 'Myanmar', 
-    'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"
-]
+    'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
 merge_data_for_countries(countries_southeastasia, "asia_merged_amning_and_pneumonia_data.csv")
 
 
 countries_centralafrica = [
     'Angola', 'Cameroon', 'Central African Republic', 'Chad', 'Congo',
     'Democratic Republic of the Congo','Equatorial Guinea','Gabon',
-    'Sao Tome and Principe'
-]
+    'Sao Tome and Principe']
 merge_data_for_countries(countries_centralafrica, "africa_merged_amning_and_pneumonia_data.csv")
