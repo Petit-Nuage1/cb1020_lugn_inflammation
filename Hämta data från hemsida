@@ -18,49 +18,11 @@ else:
 
 
 
-#KOD FÖR ATT LÄGGA IN SYDOSTASIATISKA LÄNDERS AMNING OCH LUNGINFLAMMATION I SAMMA FIL
+#KOD FÖR ATT LÄGGA IN SYDOSTASIATISKA OCH AFRIKANSKA LÄNDERS AMNING OCH LUNGINFLAMMATION I SAMMA FIL (MEN SERPARAT FÖR REGION): 
 
 import pandas as pd
 
-# Läs in CSV-filerna
-df_amning = pd.read_csv("unicef_amning_data.csv")
-df_pneumonia = pd.read_csv("unicef_pneumonia_data.csv")
-
-# Definiera en lista med länder att inkludera, i detta fall Sydostasien
-countries_southeastasia = ['Thailand', 'Indonesia', 'Viet Nam', 'Philippines', 'Myanmar', 'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
-
-# Filtrera amningsdata för endast de länder som finns i listan
-filtered_amning = df_amning[df_amning['Geographic area'].isin(countries_southeastasia)]
-filtered_amning = filtered_amning[['Geographic area', 'Indicator', 'OBS_VALUE']]
-
-# Gruppera amningsdata efter 'Geographic area' och 'Indicator' och beräkna medelvärdet för 'OBS_VALUE'
-aggregated_amning = filtered_amning.groupby(['Geographic area', 'Indicator'], as_index=False)['OBS_VALUE'].mean()
-
-# Filtrera pneumonidata för valda länder och där alla tre kolumner är 'Total'
-filtered_pneumonia = df_pneumonia[
-    (df_pneumonia['Geographic area'].isin(countries_southeastasia)) &
-    (df_pneumonia['Wealth Quintile'] == 'Total') &
-    (df_pneumonia['Residence'] == 'Total') &
-    (df_pneumonia["Mother's Education Level"] == 'Total')
-]
-
-# Välj relevanta kolumner från pneumonidatan och byt namn på 'OBS_VALUE'
-filtered_pneumonia = filtered_pneumonia[['Geographic area', 'OBS_VALUE']]
-filtered_pneumonia = filtered_pneumonia.rename(columns={'OBS_VALUE': 'Pneumonia_Value'}) 
-aggregated_pneumonia = mean_pneumonia = filtered_pneumonia.groupby('Geographic area')['Pneumonia_Value'].mean().reset_index()
-
-# Slå ihop amnings- och pneumonidata
-merged_data = pd.merge(aggregated_amning, mean_pneumonia, on='Geographic area', how='left')
-
-# Spara den sammanslagna datan till en ny CSV-fil
-merged_data.to_csv("selected_countries_amning_and_pneumoni_data.csv", index=False)
-
-print("Ny CSV-fil med amningsdata och pneumonidata för valda länder har skapats.")
-
-import pandas as pd
-
-def merge_data_for_countries(countries):
-   .
+def merge_data_for_countries(countries, output_file):
 
     # Läs in data från fasta filvägar
     df_amning = pd.read_csv("unicef_amning_data.csv")
@@ -90,24 +52,21 @@ def merge_data_for_countries(countries):
     merged_data = pd.merge(aggregated_amning, aggregated_pneumonia, on='Geographic area', how='left')
     
     # Spara den sammanslagna datan till en ny CSV-fil
-    output_file = "merged_amning_and_pneumonia_data.csv"
+    
     merged_data.to_csv(output_file, index=False)
     print(f"Ny CSV-fil med amningsdata och pneumonidata för valda länder har skapats: {output_file}")
 
 # Exempel på användning:
-countries = [
+countries_southeastasia = [
     'Thailand', 'Indonesia', 'Viet Nam', 'Philippines', 'Myanmar', 
     'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"
 ]
-countries_central_africa = [
-    'Angola',
-    'Cameroon',
-    'Central African Republic',
-    'Chad',
-    'Congo',
-    'Democratic Republic of the Congo',
-    'Equatorial Guinea',
-    'Gabon',
+merge_data_for_countries(countries1, "asia_merged_amning_and_pneumonia_data.csv")
+
+
+countries_centralafrica = [
+    'Angola', 'Cameroon', 'Central African Republic', 'Chad', 'Congo',
+    'Democratic Republic of the Congo','Equatorial Guinea','Gabon',
     'Sao Tome and Principe'
 ]
-merge_data_for_countries(countries)
+merge_data_for_countries(countries_centralafrica, "africa_merged_amning_and_pneumonia_data.csv")
