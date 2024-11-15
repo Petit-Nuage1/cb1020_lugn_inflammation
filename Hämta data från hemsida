@@ -99,5 +99,15 @@ countries = [
     'Thailand', 'Indonesia', 'Viet Nam', 'Philippines', 'Myanmar', 
     'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"
 ]
-
+countries_central_africa = [
+    'Angola',
+    'Cameroon',
+    'Central African Republic',
+    'Chad',
+    'Congo',
+    'Democratic Republic of the Congo',
+    'Equatorial Guinea',
+    'Gabon',
+    'Sao Tome and Principe'
+]
 merge_data_for_countries(countries)
