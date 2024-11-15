@@ -61,7 +61,7 @@ countries_southeastasia = [
     'Thailand', 'Indonesia', 'Viet Nam', 'Philippines', 'Myanmar', 
     'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"
 ]
-merge_data_for_countries(countries1, "asia_merged_amning_and_pneumonia_data.csv")
+merge_data_for_countries(countries_southeastasia, "asia_merged_amning_and_pneumonia_data.csv")
 
 
 countries_centralafrica = [
