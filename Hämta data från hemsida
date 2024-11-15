@@ -15,3 +15,29 @@ if response.status_code == 200:
     print("CSV file has been downloaded successfully.")
 else:
     print(f"Error: {response.status_code} - {response.text}")
+
+
+
+
+
+import pandas as pd
+
+# Läs in CSV-filen
+df = pd.read_csv("unicef_amning_data.csv")
+
+# Definiera en lista med länder att inkludera, i detta fall Sydostasien
+countries = ['Thailand', 'Indonesia', 'Viet Nam', 'Malaysia', 'Philippines', 'Myanmar', 'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
+
+# Filtrera datan för endast de länder som finns i listan
+filtered_data = df[df['Geographic area'].isin(countries)]
+
+# Välj kolumnerna vi vill behålla ('Geographic area', 'Indicator', och 'OBS_VALUE')
+filtered_data = filtered_data[['Geographic area', 'Indicator', 'OBS_VALUE']]
+
+# Gruppera data efter 'Geographic area' och 'Indicator' och beräkna medelvärdet för 'OBS_VALUE'
+aggregated_data = filtered_data.groupby(['Geographic area', 'Indicator'], as_index=False)['OBS_VALUE'].mean()
+
+# Spara det aggregerade datan till en ny CSV-fil
+aggregated_data.to_csv("selected_countries_amning_data_aggregated.csv", index=False, mode='w', header=True)
+
+print("Ny CSV-fil med medelvärde av data för varje amningspraktik i valda länder har skapats.")
