@@ -18,6 +18,8 @@ else:
 
 
 
+#KOD FÖR ATT LÄGGA IN SYDOSTASIATISKA LÄNDERS AMNING OCH LUNGINFLAMMATION I SAMMA FIL
+
 import pandas as pd
 
 # Läs in CSV-filerna
@@ -45,12 +47,13 @@ filtered_pneumonia = df_pneumonia[
 # Välj relevanta kolumner från pneumonidatan och byt namn på 'OBS_VALUE'
 filtered_pneumonia = filtered_pneumonia[['Geographic area', 'OBS_VALUE']]
 filtered_pneumonia = filtered_pneumonia.rename(columns={'OBS_VALUE': 'Pneumonia_Value'}) 
-aggregated_pneumonia = filtered_pneumonia.groupby(['Geographic area', 'Pneumonia_Value'], as_index=False)['Pneumonia_Value'].mean()
+aggregated_pneumonia = mean_pneumonia = filtered_pneumonia.groupby('Geographic area')['Pneumonia_Value'].mean().reset_index()
 
 # Slå ihop amnings- och pneumonidata
-merged_data = pd.merge(aggregated_amning, aggregated_pneumonia, on='Geographic area', how='left')
+merged_data = pd.merge(aggregated_amning, mean_pneumonia, on='Geographic area', how='left')
 
 # Spara den sammanslagna datan till en ny CSV-fil
 merged_data.to_csv("selected_countries_amning_and_pneumoni_data.csv", index=False)
 
 print("Ny CSV-fil med amningsdata och pneumonidata för valda länder har skapats.")
+
