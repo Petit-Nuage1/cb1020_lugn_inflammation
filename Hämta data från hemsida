@@ -18,7 +18,7 @@ else:
 
 
 
-
+#KOD för att extrahera alla sydostasiatiska länder i en ny fil, amning
 
 import pandas as pd
 
