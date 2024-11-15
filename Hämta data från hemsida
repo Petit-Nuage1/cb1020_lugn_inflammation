@@ -27,7 +27,7 @@ df_amning = pd.read_csv("unicef_amning_data.csv")
 df_pneumonia = pd.read_csv("unicef_pneumonia_data.csv")
 
 # Definiera en lista med länder att inkludera, i detta fall Sydostasien
-countries_southeastasia = ['Thailand', 'Indonesia', 'Viet Nam', 'Malaysia', 'Philippines', 'Myanmar', 'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
+countries_southeastasia = ['Thailand', 'Indonesia', 'Viet Nam', 'Philippines', 'Myanmar', 'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
 
 # Filtrera amningsdata för endast de länder som finns i listan
 filtered_amning = df_amning[df_amning['Geographic area'].isin(countries_southeastasia)]
