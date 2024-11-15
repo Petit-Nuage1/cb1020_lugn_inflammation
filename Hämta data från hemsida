@@ -18,26 +18,39 @@ else:
 
 
 
-#KOD för att extrahera alla sydostasiatiska länder i en ny fil, amning
-
 import pandas as pd
 
-# Läs in CSV-filen
-df = pd.read_csv("unicef_amning_data.csv")
+# Läs in CSV-filerna
+df_amning = pd.read_csv("unicef_amning_data.csv")
+df_pneumonia = pd.read_csv("unicef_pneumonia_data.csv")
 
 # Definiera en lista med länder att inkludera, i detta fall Sydostasien
-countries = ['Thailand', 'Indonesia', 'Viet Nam', 'Malaysia', 'Philippines', 'Myanmar', 'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
+countries_southeastasia = ['Thailand', 'Indonesia', 'Viet Nam', 'Malaysia', 'Philippines', 'Myanmar', 'Cambodia', 'Timor-Leste', "Lao People's Democratic Republic"]
 
-# Filtrera datan för endast de länder som finns i listan
-filtered_data = df[df['Geographic area'].isin(countries)]
+# Filtrera amningsdata för endast de länder som finns i listan
+filtered_amning = df_amning[df_amning['Geographic area'].isin(countries_southeastasia)]
+filtered_amning = filtered_amning[['Geographic area', 'Indicator', 'OBS_VALUE']]
 
-# Välj kolumnerna vi vill behålla ('Geographic area', 'Indicator', och 'OBS_VALUE')
-filtered_data = filtered_data[['Geographic area', 'Indicator', 'OBS_VALUE']]
+# Gruppera amningsdata efter 'Geographic area' och 'Indicator' och beräkna medelvärdet för 'OBS_VALUE'
+aggregated_amning = filtered_amning.groupby(['Geographic area', 'Indicator'], as_index=False)['OBS_VALUE'].mean()
 
-# Gruppera data efter 'Geographic area' och 'Indicator' och beräkna medelvärdet för 'OBS_VALUE'
-aggregated_data = filtered_data.groupby(['Geographic area', 'Indicator'], as_index=False)['OBS_VALUE'].mean()
+# Filtrera pneumonidata för valda länder och där alla tre kolumner är 'Total'
+filtered_pneumonia = df_pneumonia[
+    (df_pneumonia['Geographic area'].isin(countries_southeastasia)) &
+    (df_pneumonia['Wealth Quintile'] == 'Total') &
+    (df_pneumonia['Residence'] == 'Total') &
+    (df_pneumonia["Mother's Education Level"] == 'Total')
+]
 
-# Spara det aggregerade datan till en ny CSV-fil
-aggregated_data.to_csv("selected_countries_amning_data_aggregated.csv", index=False, mode='w', header=True)
+# Välj relevanta kolumner från pneumonidatan och byt namn på 'OBS_VALUE'
+filtered_pneumonia = filtered_pneumonia[['Geographic area', 'OBS_VALUE']]
+filtered_pneumonia = filtered_pneumonia.rename(columns={'OBS_VALUE': 'Pneumonia_Value'}) 
+aggregated_pneumonia = filtered_pneumonia.groupby(['Geographic area', 'Pneumonia_Value'], as_index=False)['Pneumonia_Value'].mean()
 
-print("Ny CSV-fil med medelvärde av data för varje amningspraktik i valda länder har skapats.")
+# Slå ihop amnings- och pneumonidata
+merged_data = pd.merge(aggregated_amning, aggregated_pneumonia, on='Geographic area', how='left')
+
+# Spara den sammanslagna datan till en ny CSV-fil
+merged_data.to_csv("selected_countries_amning_and_pneumoni_data.csv", index=False)
+
+print("Ny CSV-fil med amningsdata och pneumonidata för valda länder har skapats.")
