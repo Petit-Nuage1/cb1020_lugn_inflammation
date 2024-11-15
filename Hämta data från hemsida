@@ -16,9 +16,9 @@ if response.status_code == 200:
 else:
     print(f"Error: {response.status_code} - {response.text}")
 
+---------------------------------------------------------------------------
 
-
-#KOD FÖR ATT LÄGGA IN SYDOSTASIATISKA OCH AFRIKANSKA LÄNDERS AMNING OCH LUNGINFLAMMATION I SAMMA FIL (MEN SERPARAT FÖR REGION): 
+#Funktion FÖR ATT LÄGGA IN SYDOSTASIATISKA OCH AFRIKANSKA LÄNDERS AMNING OCH LUNGINFLAMMATION I SAMMA FIL (MEN SERPARAT FÖR REGION): 
 
 import pandas as pd
 
