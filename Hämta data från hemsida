@@ -1,3 +1,5 @@
+# LUNGINFLAMMATION: 
+
 Plocka data från hemsida
 import requests
 
@@ -13,6 +15,29 @@ if response.status_code == 200:
     with open("unicef_pneumonia_data.csv", "wb") as file:
         file.write(response.content)
     print("CSV file has been downloaded successfully.")
+else:
+    print(f"Error: {response.status_code} - {response.text}")
+
+_______________________________________________________________
+
+#AMNING:
+
+#Plocka data från hemsida
+import requests
+
+#unicef data med api nyckel sdmx(RAW DATA)
+url = "https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,NUTRITION,1.0/.NT_BF_EIBF+NT_BF_EXBF+NT_BF_CBF_12_23._T.....?startPeriod=2014&endPeriod=2024&format=csv&labels=name"
+
+#hämtar med requests.get
+response = requests.get(url)
+
+#kollar om requesten gick igenom och sparar csv-filen
+if response.status_code == 200:
+   
+    with open("unicef_amning_data.csv", "wb") as file:
+        file.write(response.content)
+    print("CSV file has been downloaded successfully.")
+    
 else:
     print(f"Error: {response.status_code} - {response.text}")
 
