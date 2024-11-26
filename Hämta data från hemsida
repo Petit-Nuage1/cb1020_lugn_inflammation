@@ -1,45 +1,33 @@
-# LUNGINFLAMMATION: 
+#Hämta länken för UNICEF-data med API-nyckel sdmx(RAW DATA): 
+url_lung = "https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,MNCH,1.0/.MNCH_PNEUCARE._T......?startPeriod=2014&endPeriod=2024&format=csv&labels=name"
+url_amning = "https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,NUTRITION,1.0/.NT_BF_EIBF+NT_BF_EXBF+NT_BF_CBF_12_23._T.....?startPeriod=2014&endPeriod=2024&format=csv&labels=name"
 
-Plocka data från hemsida
-import requests
 
-#unicef data med api nyckel sdmx(RAW DATA)
-url = "https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,MNCH,1.0/.MNCH_PNEUCARE._T......?startPeriod=2014&endPeriod=2024&format=csv&labels=name"
+#Utnyttja funktionen requests.get från paketet requests för att hämta datan: 
+response_lung = requests.get(url_lung)
+response_amning = requests.get(url_amning)
 
-#hämtar med requests.get
-response = requests.get(url)
 
-#kollar om requesten gick igenom och sparar csv filen
-if response.status_code == 200:
+#Kolla om requesten gick igenom och spara csv-filen, först lunginflammation: 
+if response_lung.status_code == 200:
    
     with open("unicef_pneumonia_data.csv", "wb") as file:
-        file.write(response.content)
-    print("CSV file has been downloaded successfully.")
-else:
-    print(f"Error: {response.status_code} - {response.text}")
-
-_______________________________________________________________
-
-#AMNING:
-
-#Plocka data från hemsida
-import requests
-
-#unicef data med api nyckel sdmx(RAW DATA)
-url = "https://sdmx.data.unicef.org/ws/public/sdmxapi/rest/data/UNICEF,NUTRITION,1.0/.NT_BF_EIBF+NT_BF_EXBF+NT_BF_CBF_12_23._T.....?startPeriod=2014&endPeriod=2024&format=csv&labels=name"
-
-#hämtar med requests.get
-response = requests.get(url)
-
-#kollar om requesten gick igenom och sparar csv-filen
-if response.status_code == 200:
-   
-    with open("unicef_amning_data.csv", "wb") as file:
-        file.write(response.content)
-    print("CSV file has been downloaded successfully.")
+        file.write(response_lung.content)
+    print("CSV-filen för pneumonia raw data har laddats ned!")
     
 else:
-    print(f"Error: {response.status_code} - {response.text}")
+    print(f"Error: {response_lung.status_code} - {response_lung.text}")
+
+
+#Kollar om requesten gick igenom och sparar csv-filen, nu för amning: 
+if response_amning.status_code == 200:
+   
+    with open("unicef_pneumonia_data.csv", "wb") as file:
+        file.write(response_amning.content)
+    print("CSV-filen för breastfeeding raw data har laddats ned!")
+    
+else:
+    print(f"Error: {response_amning.status_code} - {response_amning.text}")
 
 ---------------------------------------------------------------------------
 
