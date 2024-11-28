@@ -87,3 +87,60 @@ countries_centralafrica = [
     'Democratic Republic of the Congo','Equatorial Guinea','Gabon',
     'Sao Tome and Principe']
 merge_data_for_countries(countries_centralafrica, "africa_merged_amning_and_pneumonia_data.csv")
+
+
+__________________________________________________________________________________
+
+#PLOTTA GRAFERNA
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+
+# Ladda datasets
+asia_data = pd.read_csv('asia_merged_amning_and_pneumonia_data.csv')  
+africa_data = pd.read_csv('africa_merged_amning_and_pneumonia_data.csv')  
+
+# Hämta data för respektive region
+asia_data['Region'] = 'Asia'
+africa_data['Region'] = 'Africa'
+
+# Kombinera datasets för att göra själva plotten lättare: 
+data = pd.concat([asia_data, africa_data])
+
+# Hämta indikatorer, dvs för respektive amningspraktik
+indicators = data['Indicator'].unique()
+
+# Skapa subplot-layout
+n_indicators = len(indicators) #Vi har endast 3 indikators, dvs antal typer av amningspraktiker
+ncols = 3  # Antal grafer per rad (vi har endast en rad)
+nrows = (n_indicators // ncols)  #Funktion för att få rätt antal rader. 
+fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(18, 6 * nrows))  # Anpassa subplot-storlek
+axes = axes.flatten()  # Platta ut för att enkelt iterera
+
+# Loopa igenom respektive indikator och skapa grafer
+for i, indicator in enumerate(indicators):
+    ax = axes[i]  # Välj subplot
+    subset = data[data['Indicator'] == indicator]
+    
+    # Separera data baserat på region: 
+    asia = subset[subset['Region'] == 'Asia']
+    africa = subset[subset['Region'] == 'Africa']
+    
+    # Beräkna R-värden med Pearsonr
+    r_asia, _ = pearsonr(asia['OBS_VALUE'], asia['Pneumonia_Value'])
+    r_africa, _ = pearsonr(africa['OBS_VALUE'], africa['Pneumonia_Value'])
+    
+    # Skapa scatter plot med regression lines
+    sns.regplot(data=asia, x='OBS_VALUE', y='Pneumonia_Value', ax=ax, label=f"Asia (R={r_asia:.2f})", scatter_kws={'alpha': 0.6}, ci = 95)
+    sns.regplot(data=africa, x='OBS_VALUE', y='Pneumonia_Value', ax=ax, label=f"Africa (R={r_africa:.2f})", scatter_kws={'alpha': 0.6}, ci = 95)
+    
+    # Lägg till etiketter och titel
+    ax.set_xlabel(f"{indicator} (%)")
+    ax.set_ylabel("Lunginflammationsincidens (%)")
+    ax.set_title(f"{indicator} vs lunginflammationsincidens")
+    ax.legend()
+
+plt.tight_layout()
+plt.show()
