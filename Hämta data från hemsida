@@ -91,8 +91,6 @@ merge_data_for_countries(countries_centralafrica, "africa_merged_amning_and_pneu
 
 __________________________________________________________________________________
 
-#PLOTTA GRAFERNA
-
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -128,18 +126,18 @@ for i, indicator in enumerate(indicators):
     asia = subset[subset['Region'] == 'Asia']
     africa = subset[subset['Region'] == 'Africa']
     
-    # Beräkna R-värden med Pearsonr
-    r_asia, _ = pearsonr(asia['OBS_VALUE'], asia['Pneumonia_Value'])
-    r_africa, _ = pearsonr(africa['OBS_VALUE'], africa['Pneumonia_Value'])
+   # Beräkna R²-värden med Pearsonr
+    r2_asia = pearsonr(asia['OBS_VALUE'], asia['Pneumonia_Value'])[0]**2
+    r2_africa = pearsonr(africa['OBS_VALUE'], africa['Pneumonia_Value'])[0]**2
     
     # Skapa scatter plot med regression lines
-    sns.regplot(data=asia, x='OBS_VALUE', y='Pneumonia_Value', ax=ax, label=f"Asia (R={r_asia:.2f})", scatter_kws={'alpha': 0.6}, ci = 95)
-    sns.regplot(data=africa, x='OBS_VALUE', y='Pneumonia_Value', ax=ax, label=f"Africa (R={r_africa:.2f})", scatter_kws={'alpha': 0.6}, ci = 95)
-    
+    sns.regplot(data=asia, x='OBS_VALUE', y='Pneumonia_Value', ax=ax, label=f"Southeast Asia (R²={r2_asia:.2f})", scatter_kws={'alpha': 0.6}, ci=95)
+    sns.regplot(data=africa, x='OBS_VALUE', y='Pneumonia_Value', ax=ax, label=f"Central Africa (R²={r2_africa:.2f})", scatter_kws={'alpha': 0.6}, ci=95)
+
     # Lägg till etiketter och titel
     ax.set_xlabel(f"{indicator} (%)")
-    ax.set_ylabel("Lunginflammationsincidens (%)")
-    ax.set_title(f"{indicator} vs lunginflammationsincidens")
+    ax.set_ylabel("Pneumonia incidence (%)")
+    ax.set_title(f"{indicator} vs Pneumonia incidence")
     ax.legend()
 
 plt.tight_layout()
