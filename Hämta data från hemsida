@@ -22,7 +22,7 @@ else:
 #Kollar om requesten gick igenom och sparar csv-filen, nu för amning: 
 if response_amning.status_code == 200:
    
-    with open("unicef_pneumonia_data.csv", "wb") as file:
+    with open("unicef_amning_data.csv", "wb") as file:
         file.write(response_amning.content)
     print("CSV-filen för breastfeeding raw data har laddats ned!")
     
